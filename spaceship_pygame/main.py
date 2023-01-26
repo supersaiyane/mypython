@@ -10,19 +10,19 @@ pygame.init();
 screen = pygame.display.set_mode((800,600))
 
 #background
-background = pygame.image.load('spaceship_pygame\\galaxy.jpg')
+background = pygame.image.load('galaxy.jpg')
 
 #background sound 
-mixer.music.load('spaceship_pygame\\background.wav')
+mixer.music.load('background.wav')
 mixer.music.play(-1)
 
 #Title and Icon
-pygame.display.set_caption("spaceship_pygame\\Space Invaders")
-icon = pygame.image.load('spaceship_pygame\\ufo.png')
+pygame.display.set_caption("Space Invaders")
+icon = pygame.image.load('ufo.png')
 pygame.display.set_icon(icon)
 
 #player
-playerImg = pygame.image.load('spaceship_pygame\\spaceship.png')
+playerImg = pygame.image.load('spaceship.png')
 playerX=370
 playerY=480
 playerX_change=0
@@ -45,7 +45,7 @@ enemyY_change=[]
 num_of_enemies=6
 
 for i in range(num_of_enemies):
-    enemyImg.append(pygame.image.load('spaceship_pygame\\enemy.png'))
+    enemyImg.append(pygame.image.load('enemy.png'))
     enemyX.append(random.randint(0,735))
     enemyY.append(random.randint(50,150))
     enemyX_change.append(0.3)
@@ -54,7 +54,7 @@ for i in range(num_of_enemies):
 
 
 #single bullet
-bulletImg = pygame.image.load('spaceship_pygame\\bullet.png')
+bulletImg = pygame.image.load('bullet.png')
 bulletX=0
 bulletY=480
 bulletX_change=0
@@ -132,9 +132,8 @@ while running:
                 playerX_change = 0.3
             if event.key == pygame.K_SPACE:
                 if bullet_state is "ready":
-                    bullet_Sound = mixer.Sound('spaceship_pygame//laser.wav')
+                    bullet_Sound = mixer.Sound('laser.wav')
                     bullet_Sound.play()
-                    mixer.Sound
                     #get the current x coordinate of spaceship
                     bulletX = playerX
                     fire_bullet(bulletX,bulletY)
@@ -180,7 +179,7 @@ while running:
         #collision for multiple enemy
         collision = isCollision(enemyX[i],enemyY[i],bulletX,bulletY)
         if collision:
-            explosion_Sound = mixer.Sound('spaceship_pygame//explosion.wav')
+            explosion_Sound = mixer.Sound('explosion.wav')
             explosion_Sound.play()
             bulletY = 480
             bullet_state = "ready"
