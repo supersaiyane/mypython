@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from pygame import mixer
 
 #initialize the pygame
 pygame.init();
@@ -9,15 +10,19 @@ pygame.init();
 screen = pygame.display.set_mode((800,600))
 
 #background
-background = pygame.image.load('galaxy.jpg')
+background = pygame.image.load('spaceship_pygame\\galaxy.jpg')
+
+#background sound 
+mixer.music.load('spaceship_pygame\\background.wav')
+mixer.music.play(-1)
 
 #Title and Icon
-pygame.display.set_caption("Space Invaders")
-icon = pygame.image.load('ufo.png')
+pygame.display.set_caption("spaceship_pygame\\Space Invaders")
+icon = pygame.image.load('spaceship_pygame\\ufo.png')
 pygame.display.set_icon(icon)
 
 #player
-playerImg = pygame.image.load('spaceship.png')
+playerImg = pygame.image.load('spaceship_pygame\\spaceship.png')
 playerX=370
 playerY=480
 playerX_change=0
@@ -40,16 +45,16 @@ enemyY_change=[]
 num_of_enemies=6
 
 for i in range(num_of_enemies):
-    enemyImg.append(pygame.image.load('enemy.png'))
+    enemyImg.append(pygame.image.load('spaceship_pygame\\enemy.png'))
     enemyX.append(random.randint(0,735))
     enemyY.append(random.randint(50,150))
     enemyX_change.append(0.3)
-    enemyY_change.append(40)
+    enemyY_change.append(50)
 
 
 
-#bullet
-bulletImg = pygame.image.load('bullet.png')
+#single bullet
+bulletImg = pygame.image.load('spaceship_pygame\\bullet.png')
 bulletX=0
 bulletY=480
 bulletX_change=0
@@ -58,15 +63,23 @@ bulletY_change=0.9
 #fire = bullet is moving
 bullet_state="ready"
 
-#score
+
+#score font
 scoreValue = 0
 font =  pygame.font.Font('freesansbold.ttf',32)
 textX=10
 textY=10
 
+#Game over font
+over_font = pygame.font.Font('freesansbold.ttf',64)
+
 def showScore(x,y):
     score = font.render("Score : " + str(scoreValue),True,(255,255,255))
     screen.blit(score,(x,y))
+
+def game_over_text():
+    over_text = over_font.render("GAME OVER",True,(255,255,255))
+    screen.blit(over_text,(200,250))
 
 def player(x,y):
     screen.blit(playerImg,(x,y))
@@ -93,9 +106,7 @@ def isCollision(enemyX,enemyY,bulletX,bulletY):
     else:
         return False
 
-def reEngaegEnemy():
-    enemyX=random.randint(0,735)
-    enemyY=random.randint(50,150)
+
 
 #game loop
 running= True
@@ -121,6 +132,9 @@ while running:
                 playerX_change = 0.3
             if event.key == pygame.K_SPACE:
                 if bullet_state is "ready":
+                    bullet_Sound = mixer.Sound('spaceship_pygame//laser.wav')
+                    bullet_Sound.play()
+                    mixer.Sound
                     #get the current x coordinate of spaceship
                     bulletX = playerX
                     fire_bullet(bulletX,bulletY)
@@ -147,6 +161,14 @@ while running:
 
     #setting boundries for multiple enmy
     for i in range(num_of_enemies):
+
+        #game over
+        if enemyY[i] > 420:
+            for j in range(num_of_enemies):
+                enemyY[j] = 2000
+            game_over_text()
+            break
+
         enemyX[i] += enemyX_change[i]
         if enemyX[i] <= 0:
             enemyX_change[i] = 0.1
@@ -158,6 +180,8 @@ while running:
         #collision for multiple enemy
         collision = isCollision(enemyX[i],enemyY[i],bulletX,bulletY)
         if collision:
+            explosion_Sound = mixer.Sound('spaceship_pygame//explosion.wav')
+            explosion_Sound.play()
             bulletY = 480
             bullet_state = "ready"
             scoreValue += 1
